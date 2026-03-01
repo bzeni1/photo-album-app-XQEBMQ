@@ -37,9 +37,11 @@ Minden GitHub push automatikusan új buildet indít.
 
 ## Projekt struktúra
 
+```
 /
 ├── album/
 ├── config/
 ├── Dockerfile
 ├── docker-compose.yml
 └── requirements.txt
+```
