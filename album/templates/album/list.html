@@ -1,0 +1,70 @@
+{% extends "album/base.html" %}
+{% block title %}Lista · Photo Album{% endblock %}
+
+{% block content %}
+  <div class="grid">
+    <div class="card">
+      <h2>Képek</h2>
+      <div class="row">
+        <span class="muted">Rendezés:</span>
+        <a class="pill {% if current_sort == 'date' %}active{% endif %}" href="/?sort=date">Dátum</a>
+        <a class="pill {% if current_sort == 'name' %}active{% endif %}" href="/?sort=name">Név</a>
+      </div>
+
+      <div class="divider"></div>
+
+      {% if not user.is_authenticated %}
+        <div class="hero">
+          <div><b>Belépés szükséges</b> a képek feltöltéséhez és kezeléséhez.</div>
+          <div class="muted">Regisztrálj vagy jelentkezz be a folytatáshoz.</div>
+        </div>
+      {% endif %}
+
+      <div class="divider"></div>
+
+      <div class="list">
+        {% for p in photos %}
+          <div class="item">
+            <div class="row" style="gap:12px">
+              <img class="thumb" src="{{ p.public_url }}" alt="{{ p.name }}">
+              <div>
+                <div class="title"><a href="{% url 'photo_detail' p.pk %}">{{ p.name }}</a></div>
+                <div class="meta">{{ p.uploaded_at|date:"Y-m-d H:i" }}</div>
+              </div>
+            </div>
+
+            <div class="row">
+              <a class="btn" href="{% url 'photo_detail' p.pk %}">Megnyitás</a>
+              <a class="btn danger" href="{% url 'photo_delete' p.pk %}">Törlés</a>
+            </div>
+          </div>
+        {% empty %}
+          <div class="muted">Nincs még feltöltött kép.</div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Gyors infó</h2>
+      <p class="muted">
+        • Név max. 40 karakter<br>
+        • Dátum: év-hó-nap óra:perc<br>
+        • Feltöltés/törlés csak belépve
+      </p>
+
+      <div class="divider"></div>
+
+      {% if user.is_authenticated %}
+        <div class="hero">
+          <div><b>Készen állsz feltölteni</b></div>
+          <div class="muted">Használd a “Feltöltés” gombot fent.</div>
+        </div>
+      {% else %}
+        <div class="hero">
+          <div><b>Demo mód</b></div>
+          <div class="muted">Belépés nélkül a saját album nem elérhető.</div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

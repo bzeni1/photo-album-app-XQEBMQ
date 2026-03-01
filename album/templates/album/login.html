@@ -1,0 +1,34 @@
+{% extends "album/base.html" %}
+{% block title %}Belépés · Photo Album{% endblock %}
+
+{% block content %}
+  <div class="grid">
+    <div class="card">
+      <h2>Belépés</h2>
+
+      {% if error %}
+        <div class="errors">{{ error }}</div>
+        <div class="divider"></div>
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+        <label>Felhasználónév</label>
+        <input name="username" required>
+
+        <label>Jelszó</label>
+        <input type="password" name="password" required>
+
+        <div class="divider"></div>
+        <button class="btn primary" type="submit">Belépés</button>
+        <a class="btn" href="{% url 'photo_list' %}">Vissza</a>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>Nincs fiókod?</h2>
+      <p class="muted">Regisztrálj 30 másodperc alatt.</p>
+      <a class="btn primary" href="{% url 'register' %}">Regisztráció</a>
+    </div>
+  </div>
+{% endblock %}

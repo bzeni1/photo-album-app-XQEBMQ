@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Photo Album{% endblock %}</title>
+  <style>
+    :root{
+      --bg:#0b0f17; --card:#101826; --muted:#95a3b8; --text:#e8eefc;
+      --line:#1f2a3b; --accent:#60a5fa; --accent2:#34d399; --danger:#fb7185;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 16px;
+    }
+    *{box-sizing:border-box}
+    body{
+    margin:0;
+    background: linear-gradient(180deg, #0f172a 0%, #0b1220 100%);
+    color:var(--text);
+    font: 15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+    }
+    a{color:var(--accent); text-decoration:none}
+    a:hover{text-decoration:underline}
+    .wrap{max-width:980px; margin:0 auto; padding:28px 18px 48px}
+    .topbar{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:14px 16px; border:1px solid var(--line); border-radius:var(--radius);
+    background: rgba(16,24,38,.92);
+    box-shadow: var(--shadow);
+    }
+    .brand{display:flex; align-items:center; gap:10px}
+    .logo{
+      width:34px; height:34px; border-radius:12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 10px 20px rgba(96,165,250,.2);
+    }
+    .brand h1{font-size:14px; margin:0; letter-spacing:.2px}
+    .brand .sub{color:var(--muted); font-size:12px}
+    .nav{display:flex; flex-wrap:wrap; gap:10px; align-items:center}
+    .pill{padding:7px 10px; border:1px solid var(--line); border-radius:999px; color:var(--text)}
+    .pill.active{
+        background: linear-gradient(135deg, rgba(96,165,250,.25), rgba(52,211,153,.18));
+        border-color: rgba(96,165,250,.5);
+        box-shadow: 0 0 0 2px rgba(96,165,250,.15);
+        }
+    .pill:hover{border-color:#2f3b52; text-decoration:none}
+    .btn{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:9px 12px; border-radius:12px; border:1px solid var(--line);
+      background: rgba(16,24,38,.9); color:var(--text); cursor:pointer;
+    }
+    .btn:hover{border-color:#2f3b52}
+    .btn.primary{background: linear-gradient(135deg, rgba(96,165,250,.25), rgba(52,211,153,.18)); border-color: rgba(96,165,250,.35)}
+    .btn.danger{background: rgba(251,113,133,.12); border-color: rgba(251,113,133,.35)}
+    .grid{
+      margin-top:18px; display:grid; grid-template-columns: 1.2fr .8fr; gap:16px;
+    }
+    @media (max-width: 860px){ .grid{grid-template-columns:1fr} .topbar{position:static}}
+    .card{
+      background: rgba(16,24,38,.75); border:1px solid var(--line);
+      border-radius: var(--radius); box-shadow: var(--shadow); padding:16px;
+    }
+    .card h2{margin:0 0 10px; font-size:16px}
+    .muted{color:var(--muted)}
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .divider{height:1px; background: var(--line); margin:12px 0}
+    input, select{
+      width:100%; padding:10px 12px; border-radius:12px;
+      border:1px solid var(--line); background: rgba(8,12,20,.6); color:var(--text);
+      outline:none;
+    }
+    input:focus{border-color: rgba(96,165,250,.5); box-shadow: 0 0 0 3px rgba(96,165,250,.15)}
+    label{display:block; font-size:12px; color:var(--muted); margin:12px 0 6px}
+    .list{display:flex; flex-direction:column; gap:10px}
+    .item{
+      display:flex; justify-content:space-between; gap:14px; align-items:center;
+      padding:12px; border:1px solid var(--line); border-radius:14px;
+      background: rgba(8,12,20,.45);
+    }
+    .item:hover{border-color:#2f3b52}
+    .item .title{font-weight:600}
+    .item .meta{font-size:12px; color:var(--muted)}
+    .thumb{
+      width:56px; height:56px; border-radius:14px; object-fit:cover; border:1px solid var(--line);
+      background: rgba(0,0,0,.25);
+    }
+    .hero{
+      padding:16px; border-radius: var(--radius);
+      background: linear-gradient(135deg, rgba(96,165,250,.14), rgba(52,211,153,.10));
+      border:1px solid rgba(96,165,250,.18);
+    }
+    .hero b{color:#dbeafe}
+    .errors{padding:10px 12px; border-radius:12px; border:1px solid rgba(251,113,133,.35); background: rgba(251,113,133,.10)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <h1>Photo Album</h1>
+          <div class="sub">Django + Supabase + Render</div>
+        </div>
+      </div>
+
+      <div class="nav">
+        <a class="pill" href="{% url 'photo_list' %}">Lista</a>
+
+        {% if user.is_authenticated %}
+          <span class="muted">👤 {{ user.username }}</span>
+          <a class="btn primary" href="{% url 'photo_upload' %}">+ Feltöltés</a>
+          <a class="btn" href="{% url 'logout' %}">Kilépés</a>
+        {% else %}
+          <a class="btn" href="{% url 'login' %}">Belépés</a>
+          <a class="btn primary" href="{% url 'register' %}">Regisztráció</a>
+        {% endif %}
+      </div>
+    </div>
+
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>

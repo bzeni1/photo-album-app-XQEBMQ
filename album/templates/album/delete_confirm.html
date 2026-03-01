@@ -1,0 +1,36 @@
+{% extends "album/base.html" %}
+{% block title %}Törlés · Photo Album{% endblock %}
+
+{% block content %}
+  <div class="grid">
+    <div class="card">
+      <h2>Törlés megerősítése</h2>
+      <p class="muted">Biztosan törlöd ezt a képet?</p>
+
+      <div class="item">
+        <div class="row">
+          <img class="thumb" src="{{ photo.public_url }}" alt="{{ photo.name }}">
+          <div>
+            <div class="title">{{ photo.name }}</div>
+            <div class="meta">{{ photo.uploaded_at|date:"Y-m-d H:i" }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <form method="post">
+        {% csrf_token %}
+        <button class="btn danger" type="submit">Igen, törlés</button>
+        <a class="btn" href="{% url 'photo_detail' photo.pk %}">Mégse</a>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>Megjegyzés</h2>
+      <p class="muted">
+        A törlés Supabase Storage-ból is eltávolítja a fájlt, és a DB rekordot is törli.
+      </p>
+    </div>
+  </div>
+{% endblock %}

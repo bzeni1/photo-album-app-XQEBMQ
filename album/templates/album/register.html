@@ -1,0 +1,39 @@
+{% extends "album/base.html" %}
+{% block title %}Regisztráció · Photo Album{% endblock %}
+
+{% block content %}
+  <div class="grid">
+    <div class="card">
+      <h2>Regisztráció</h2>
+
+      <form method="post">
+        {% csrf_token %}
+
+        {{ form.non_field_errors }}
+
+        <label>Felhasználónév</label>
+        {{ form.username }}
+
+        <label>Email (opcionális)</label>
+        {{ form.email }}
+
+        <label>Jelszó</label>
+        {{ form.password1 }}
+
+        <label>Jelszó ismét</label>
+        {{ form.password2 }}
+
+        <div class="divider"></div>
+        <button class="btn primary" type="submit">Fiók létrehozása</button>
+        <a class="btn" href="{% url 'photo_list' %}">Vissza</a>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>Tipp</h2>
+      <p class="muted">
+        Regisztráció után automatikusan beléptetünk, és azonnal tölthetsz fel képet.
+      </p>
+    </div>
+  </div>
+{% endblock %}

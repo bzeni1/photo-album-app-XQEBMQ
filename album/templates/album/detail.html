@@ -1,0 +1,22 @@
+{% extends "album/base.html" %}
+{% block title %}{{ photo.name }} · Photo Album{% endblock %}
+
+{% block content %}
+  <div class="card" style="margin-top:18px">
+    <div class="row" style="justify-content:space-between">
+      <div>
+        <h2 style="margin:0">{{ photo.name }}</h2>
+        <div class="muted">{{ photo.uploaded_at|date:"Y-m-d H:i" }}</div>
+      </div>
+      <div class="row">
+        <a class="btn" href="{% url 'photo_list' %}">Vissza</a>
+        <a class="btn danger" href="{% url 'photo_delete' photo.pk %}">Törlés</a>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <img src="{{ photo.public_url }}" alt="{{ photo.name }}"
+         style="width:100%; border-radius:16px; border:1px solid var(--line); background:rgba(0,0,0,.25)">
+  </div>
+{% endblock %}

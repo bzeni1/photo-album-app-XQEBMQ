@@ -1,0 +1,31 @@
+{% extends "album/base.html" %}
+{% block title %}Feltöltés · Photo Album{% endblock %}
+
+{% block content %}
+  <div class="grid">
+    <div class="card">
+      <h2>Új kép feltöltése</h2>
+
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label>Név (max 40)</label>
+        {{ form.name }}
+
+        <label>Kép fájl</label>
+        {{ form.image }}
+
+        <div class="divider"></div>
+        <button class="btn primary" type="submit">Feltöltés</button>
+        <a class="btn" href="{% url 'photo_list' %}">Mégse</a>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>Tippek</h2>
+      <p class="muted">
+        JPG/PNG ajánlott. A kép Supabase Storage-be kerül, a metaadat pedig Postgresbe.
+      </p>
+    </div>
+  </div>
+{% endblock %}
