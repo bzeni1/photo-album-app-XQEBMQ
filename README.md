@@ -1,5 +1,5 @@
-# photo-album-app-XQEBMQ
-# Photo Album – Django alapú PaaS alkalmazás
+# photo-album-PaaS
+
 
 ## 1. Projekt bemutatása
 
