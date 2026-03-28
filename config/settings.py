@@ -26,7 +26,7 @@ DEBUG = os.getenv("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = os.environ.get(
     "ALLOWED_HOSTS",
-    "localhost,127.0.0.1,0.0.0.0"
+    "*"
 ).split(",")
 
 
