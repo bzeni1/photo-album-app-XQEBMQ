@@ -16,6 +16,6 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 COPY . /app
 RUN python manage.py collectstatic --noinput || true
 
-EXPOSE 8000
+EXPOSE 8080
 
-CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8080"]
