@@ -4,6 +4,8 @@ import os
 import re
 import random
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+SAMPLE_PATH = os.path.join(BASE_DIR, "sample.jpg")
 
 class AlbumUser(HttpUser):
     wait_time = between(1, 3)
@@ -116,15 +118,14 @@ class AlbumUser(HttpUser):
 
     @task(2)
     def upload_photo(self):
-        token = self.get_csrf_token(self.UPLOAD_PATH)
+        token = self.get_csrf_token(self.UPLOAD_PATH, "GET /upload/")
         if not token:
             return
 
-        sample_path = "sample.jpg"
-        if not os.path.exists(sample_path):
+        if not os.path.exists(SAMPLE_PATH):
             return
 
-        with open(sample_path, "rb") as image_file:
+        with open(SAMPLE_PATH, "rb") as image_file:
             self.client.post(
                 self.UPLOAD_PATH,
                 data={
@@ -141,16 +142,17 @@ class AlbumUser(HttpUser):
 
         self.refresh_photo_ids()
 
-    @task(1)
+    @task(3)
     def delete_photo(self):
         self.refresh_photo_ids()
-        if len(self.photo_ids) <= 0:
+
+        if not self.photo_ids:
             return
 
         photo_id = random.choice(self.photo_ids)
         delete_path = f"/{photo_id}/delete/"
 
-        token = self.get_csrf_token(delete_path)
+        token = self.get_csrf_token(delete_path, "GET /<id>/delete/")
         if not token:
             return
 
