@@ -25,14 +25,16 @@ class AlbumUser(HttpUser):
         self.refresh_photo_ids()
 
 
-    def get_csrf_token(self, path: str):
-        response = self.client.get(path, name=f"GET {path}")
+    def get_csrf_token(self, path: str, request_name: str = None):
+        response = self.client.get(
+            path,
+            name=request_name if request_name else f"GET {path}"
+        )
         soup = BeautifulSoup(response.text, "html.parser")
         token_input = soup.find("input", {"name": "csrfmiddlewaretoken"})
         if token_input and token_input.get("value"):
             return token_input["value"]
         return None
-
 
     def login(self):
         token = self.get_csrf_token(self.LOGIN_PATH)
