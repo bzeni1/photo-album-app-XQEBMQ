@@ -11,6 +11,7 @@ class AlbumUser(HttpUser):
     HOME_PATH = "/"
     LOGIN_PATH = "/auth/login/"
     LOGOUT_PATH = "/auth/logout/"
+    REGISTER_PATH = "/auth/register/"
     UPLOAD_PATH = "/upload/"
 
     USERNAME = os.getenv("LOCUST_USERNAME", "loadtest1")
@@ -21,6 +22,7 @@ class AlbumUser(HttpUser):
         self.login()
         self.refresh_photo_ids()
 
+
     def get_csrf_token(self, path: str):
         response = self.client.get(path, name=f"GET {path}")
         soup = BeautifulSoup(response.text, "html.parser")
@@ -28,6 +30,7 @@ class AlbumUser(HttpUser):
         if token_input and token_input.get("value"):
             return token_input["value"]
         return None
+
 
     def login(self):
         token = self.get_csrf_token(self.LOGIN_PATH)
@@ -46,14 +49,35 @@ class AlbumUser(HttpUser):
             allow_redirects=True,
         )
 
+    @task(1)
+    def register_user(self):
+        token = self.get_csrf_token(self.REGISTER_PATH)
+        if not token:
+            return
+
+        username = f"user_{random.randint(1, 1000000)}"
+
+        self.client.post(
+            self.REGISTER_PATH,
+            data={
+                "username": username,
+                "password1": "Test123456!",
+                "password2": "Test123456!",
+                "csrfmiddlewaretoken": token,
+            },
+            headers={"Referer": f"{self.host}{self.REGISTER_PATH}"},
+            name="POST /auth/register/",
+            allow_redirects=True,
+        )
+
     def refresh_photo_ids(self):
-      
         response = self.client.get(self.HOME_PATH, name="GET /")
         ids = set()
 
         soup = BeautifulSoup(response.text, "html.parser")
         for a in soup.find_all("a", href=True):
             href = a["href"]
+
             m1 = re.fullmatch(r"/(\d+)/", href)
             if m1:
                 ids.add(int(m1.group(1)))
@@ -76,6 +100,10 @@ class AlbumUser(HttpUser):
     @task(2)
     def photo_list_sorted_by_name(self):
         self.client.get("/?sort=name", name="GET /?sort=name")
+
+    @task(2)
+    def photo_list_sorted_by_date(self):
+        self.client.get("/?sort=date", name="GET /?sort=date")
 
     @task(3)
     def photo_detail(self):
@@ -116,7 +144,7 @@ class AlbumUser(HttpUser):
     @task(1)
     def delete_photo(self):
         self.refresh_photo_ids()
-        if len(self.photo_ids) <= 1:
+        if len(self.photo_ids) <= 0:
             return
 
         photo_id = random.choice(self.photo_ids)

@@ -6,9 +6,9 @@
 Django alapú webalkalmazás. 
 Az alkalmazás hitelesített felhasználói rendszerrel működik, a képek Supabase Storage-ben tárolódnak, az adatbázis pedig Supabase PostgreSQL.
 
-Az alkalmazás Docker konténerben fut, lokálisan Docker Compose segítségével indítható, éles környezetben pedig Render platformon kerül deployolásra.  
+Az alkalmazás Docker konténerben fut, lokálisan Docker Compose segítségével indítható, éles környezetben pedig Google Cloud Run platformon kerül deployolásra.  
 
-A projekt GitHub repositoryval van verziókezelve, és a Render automatikus deploy funkciója minden új commit esetén új buildet indít.
+A projekt GitHub repositoryval van verziókezelve, és a Google Cloud Run automatikus deploy funkciója minden új commit esetén új buildet indít.
 
 ---
 
@@ -16,7 +16,7 @@ A projekt GitHub repositoryval van verziókezelve, és a Render automatikus depl
 
 Az alkalmazás egy **PaaS** környezetben fut.
 
-A futtatási környezet a **Render platform**, amely biztosítja:
+A futtatási környezet a **Google Cloud Run platform**, amely biztosítja:
 
 - a Docker konténer futtatását
 - az alkalmazás internetes elérhetőségét
@@ -100,7 +100,7 @@ Adatbázis: PostgreSQL (Supabase)
 Fájltárolás: Supabase Storage  
 Konténerizáció: Docker  
 Lokális fejlesztés: Docker Compose  
-Deploy: Render (PaaS)  
+Deploy: Google Cloud Run (PaaS)  
 Verziókezelés: Git + GitHub
 
 ---
@@ -131,7 +131,7 @@ A deploy folyamat automatizált.
 
 1. fejlesztő commitot készít
 2. kód feltöltése GitHubra
-3. Render érzékeli a változást
+3. Google Cloud Run érzékeli a változást
 4. új Docker build indul
 5. az alkalmazás új verziója deployra kerül
 
@@ -143,6 +143,7 @@ A deploy folyamat automatizált.
 /
 ├── album/
 ├── config/
+├── loadtest/
 ├── Dockerfile
 ├── docker-compose.yml
 └── requirements.txt
