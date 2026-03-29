@@ -8,7 +8,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 SAMPLE_PATH = os.path.join(BASE_DIR, "sample.jpg")
 
 class AlbumUser(HttpUser):
-    wait_time = between(1, 3)
+    wait_time = between(0.1, 0.5)
 
     HOME_PATH = "/"
     LOGIN_PATH = "/auth/login/"
