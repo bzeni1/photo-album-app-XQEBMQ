@@ -144,7 +144,7 @@ class AlbumUser(HttpUser):
 
         self.refresh_photo_ids()
 
-    @task(3)
+    @task(1)
     def delete_photo(self):
         self.refresh_photo_ids()
 
