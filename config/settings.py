@@ -38,9 +38,8 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
-SUPABASE_URL = os.getenv("SUPABASE_URL", "")
-SUPABASE_BUCKET = os.getenv("SUPABASE_BUCKET", "")
-SUPABASE_ACCESS_KEY = os.getenv("SUPABASE_ACCESS_KEY", "")
+USE_GCS = os.getenv("USE_GCS", "false").lower() == "true"
+MEDIA_BUCKET_NAME = os.getenv("MEDIA_BUCKET_NAME", "")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -49,6 +48,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "storages",
     "album",
 ]
 
@@ -102,9 +102,6 @@ else:
         }
     }
 
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -128,17 +125,58 @@ USE_I18N = True
 
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
 STATIC_URL = "static/"
-STATIC_ROOT = "staticfiles"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
+if USE_GCS:
+    GS_BUCKET_NAME = MEDIA_BUCKET_NAME
+    GS_QUERYSTRING_AUTH = False
+
+    STORAGES = {
+        "default": {
+            "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
+            "OPTIONS": {
+                "bucket_name": MEDIA_BUCKET_NAME,
+            },
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    }
+
+    MEDIA_URL = f"https://storage.googleapis.com/{MEDIA_BUCKET_NAME}/"
+else:
+    MEDIA_URL = "/media/"
+    MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 LOGIN_URL = "/auth/login/"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "ERROR",
+    },
+    "loggers": {
+        "django.request": {
+            "handlers": ["console"],
+            "level": "ERROR",
+            "propagate": True,
+        },
+        "django": {
+            "handlers": ["console"],
+            "level": "ERROR",
+            "propagate": True,
+        },
+    },
+}

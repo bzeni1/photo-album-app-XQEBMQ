@@ -16,8 +16,8 @@ class RegisterForm(forms.Form):
 
     def clean(self):
         cleaned = super().clean()
-        p1 = cleaned.get("password ")
-        p2 = cleaned.get("password again")
+        p1 = cleaned.get("password1")
+        p2 = cleaned.get("password2")
         if p1 and p2 and p1 != p2:
             raise forms.ValidationError("A jelszavak nem egyeznek!")
         if p1:
@@ -27,5 +27,5 @@ class RegisterForm(forms.Form):
     def clean_username(self):
         username = self.cleaned_data["username"]
         if User.objects.filter(username=username).exists():
-            raise forms.ValidationError("Foglalt felhazsnalónév!")
+            raise forms.ValidationError("Foglalt felhasználónév!")
         return username

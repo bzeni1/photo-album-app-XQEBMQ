@@ -13,7 +13,19 @@ __pycache__/
 # Django
 db.sqlite3
 staticfiles/
+media/
 
-# OS
+# OS / editor junk
 .DS_Store
 Thumbs.db
+
+# Dumps / local exports
+supabase_dump.sql
+supabase_dump_clean.sql
+
+# Terraform local-only files
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/terraform.tfvars
+
